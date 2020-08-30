@@ -34,6 +34,7 @@ class NIFContext(object):
             taClassRef = None,
             taMsClassRef = None,
             dependencyRelationType = None,
+            dependency = None,
             uri = None,
             source = None):
         """
@@ -50,6 +51,7 @@ class NIFContext(object):
                 taClassRef = taClassRef,
                 taMsClassRef = taMsClassRef,
                 dependencyRelationType = dependencyRelationType,
+                dependency = dependency,
                 uri = uri,
                 source = source)
         if beginIndex is not None and endIndex is not None:
