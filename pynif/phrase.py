@@ -48,7 +48,7 @@ class NIFPhrase(object):
         """
         yield (self.uri, RDF.type, NIF.OffsetBasedString)
         yield (self.uri, RDF.type, NIF.Phrase)
-        yield (self.uri, NIF.anchorOf, Literal(self.mention))
+        yield (self.uri, NIF.anchorOf, Literal(self.mention, datatype=XSD.string))
         yield (self.uri, NIF.beginIndex, Literal(self.beginIndex, datatype=XSD.nonNegativeInteger))
         yield (self.uri, NIF.endIndex, Literal(self.endIndex, datatype=XSD.nonNegativeInteger))
 
@@ -67,7 +67,7 @@ class NIFPhrase(object):
         if self.taMsClassRef is not None:
             yield (self.uri, NIF.taMsClassRef, URIRef(self.taMsClassRef))
         if self.dependencyRelationType is not None:
-            yield (self.uri, NIF.dependencyRelationType, Literal(self.dependencyRelationType))
+            yield (self.uri, NIF.dependencyRelationType, Literal(self.dependencyRelationType, datatype=XSD.string))
         if self.source is not None:
             yield (self.uri, ITSRDF.taSource, Literal(self.source, datatype=XSD.string))
 
