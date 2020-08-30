@@ -27,17 +27,18 @@ class NIFContext(object):
 
     def add_phrase(self,
             beginIndex=None,
-            endIndex=None,    
+            endIndex=None,
             annotator = None,
             score = None,
             taIdentRef = None,
             taClassRef = None,
             taMsClassRef = None,
+            dependencyRelationType = None,
             uri = None,
             source = None):
         """
         Creates a new annotation in this document.
-        
+
         :returns: the new {@class NIFPhrase}
         """
         phrase = NIFPhrase(context = self.original_uri,
@@ -48,17 +49,18 @@ class NIFContext(object):
                 taIdentRef = taIdentRef,
                 taClassRef = taClassRef,
                 taMsClassRef = taMsClassRef,
+                dependencyRelationType = dependencyRelationType,
                 uri = uri,
                 source = source)
         if beginIndex is not None and endIndex is not None:
             phrase.mention = self.mention[beginIndex:endIndex]
         self.phrases.append(phrase)
         return phrase
-    
+
     @property
     def uri(self):
         return URIRef(self.original_uri)
-    
+
     def triples(self):
         """
         Returns the representation of the context as RDF triples
@@ -70,11 +72,11 @@ class NIFContext(object):
         yield (self.uri, NIF.isString, Literal(self.mention))
         if self.sourceUrl is not None:
             yield (self.uri, NIF.sourceUrl, URIRef(self.sourceUrl))
-               
+
         for phrase in self.phrases:
             for triple in phrase.triples():
                 yield triple
-        
+
     @classmethod
     def load_from_graph(cls, graph, uri):
         """
@@ -93,12 +95,12 @@ class NIFContext(object):
                 context.endIndex = o.toPython()
             elif p == NIF.sourceUrl:
                 context.sourceUrl = o.toPython()
-            
+
         # Load child phrases
         for s,p,o in graph.triples((None, NIF.referenceContext, uri)):
              phrase = NIFPhrase.load_from_graph(graph, s)
              context.phrases.append(phrase)
-             
+
         return context
 
     @property
@@ -106,13 +108,13 @@ class NIFContext(object):
         graph = Graph()
         for triple in self.triples():
             graph.add(triple)
-        
+
         graph.namespace_manager = NIFPrefixes().manager
         return graph.serialize(format='turtle')
-    
+
     def __str__(self):
         return self.__repr__()
-    
+
     def __repr__(self):
         if (self.mention is not None
             and self.beginIndex is not None
@@ -123,7 +125,7 @@ class NIFContext(object):
             return '<NIFContext {}-{}: {}>'.format(self.beginIndex, self.endIndex, repr(mention))
         else:
             return '<NIFContext (undefined)>'
-        
+
     def _tuple(self):
         return (self.uri,
             self.beginIndex,
@@ -131,10 +133,9 @@ class NIFContext(object):
             self.mention,
             self.sourceUrl,
             set(self.phrases))
-    
+
     def __eq__(self, other):
         return self._tuple() == other._tuple()
-    
+
     def __hash__(self):
         return hash(self.uri)
-    

@@ -7,7 +7,7 @@ class NIFPhrase(object):
     """
     Represents an annotation in a document.
     """
-    
+
     def __init__(self,
             context = None,
             annotator = None,
@@ -18,6 +18,7 @@ class NIFPhrase(object):
             taIdentRef = None,
             taClassRef = None,
             taMsClassRef = None,
+            dependencyRelationType = None,
             uri = None,
             source = None):
         self.context = context
@@ -29,13 +30,14 @@ class NIFPhrase(object):
         self.taIdentRef = taIdentRef
         self.taClassRef = taClassRef
         self.taMsClassRef = taMsClassRef
+        self.dependencyRelationType = dependencyRelationType
         self.original_uri = uri
         self.source = source
-        
+
     @property
     def uri(self):
         return URIRef(self.original_uri or self.generated_uri)
-        
+
     @property
     def generated_uri(self):
         return self.context.split('#')[0] + '#offset_' + str(self.beginIndex) + '_' + str(self.endIndex)
@@ -64,9 +66,11 @@ class NIFPhrase(object):
             yield (self.uri, NIF.referenceContext, URIRef(self.context))
         if self.taMsClassRef is not None:
             yield (self.uri, NIF.taMsClassRef, URIRef(self.taMsClassRef))
+        if self.dependencyRelationType is not None:
+            yield (self.uri, NIF.dependencyRelationType, URIRef(self.dependencyRelationType))
         if self.source is not None:
             yield (self.uri, ITSRDF.taSource, Literal(self.source, datatype=XSD.string))
-            
+
     @classmethod
     def load_from_graph(cls, graph, uri):
         """
@@ -92,6 +96,8 @@ class NIFPhrase(object):
                 phrase.taIdentRef = o.toPython()
             elif p == NIF.taMsClassRef:
                 phrase.taMsClassRef = o.toPython()
+            elif p == NIF.dependencyRelationType:
+                phrase.dependencyRelationType = o.toPython()
             elif p == ITSRDF.taClassRef:
                 if phrase.taClassRef is None:
                     phrase.taClassRef = []
@@ -105,13 +111,13 @@ class NIFPhrase(object):
         graph = Graph()
         for triple in self.triples():
             graph.add(triple)
-        
+
         graph.namespace_manager = NIFPrefixes().manager
         return graph.serialize(format='turtle')
 
     def __str__(self):
         return self.__repr__()
-    
+
     def __repr__(self):
         if (self.mention is not None
             and self.beginIndex is not None
@@ -122,7 +128,7 @@ class NIFPhrase(object):
             return '<NIFPhrase {}-{}: {}>'.format(self.beginIndex, self.endIndex, repr(mention))
         else:
             return '<NIFPhrase (undefined)>'
-        
+
     def _tuple(self):
         return (self.context,
         self.annotator,
@@ -133,11 +139,12 @@ class NIFPhrase(object):
         self.taIdentRef,
         set(self.taClassRef) if self.taClassRef else set(),
         self.taMsClassRef,
+        self.dependencyRelationType,
         self.uri,
         self.source)
-        
+
     def __eq__(self, other):
         return self._tuple() == other._tuple()
-    
+
     def __hash__(self):
         return hash(self.uri)
