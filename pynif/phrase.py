@@ -67,7 +67,7 @@ class NIFPhrase(object):
         if self.taMsClassRef is not None:
             yield (self.uri, NIF.taMsClassRef, URIRef(self.taMsClassRef))
         if self.dependencyRelationType is not None:
-            yield (self.uri, NIF.dependencyRelationType, URIRef(self.dependencyRelationType))
+            yield (self.uri, NIF.dependencyRelationType, Literal(self.dependencyRelationType))
         if self.source is not None:
             yield (self.uri, ITSRDF.taSource, Literal(self.source, datatype=XSD.string))
 
