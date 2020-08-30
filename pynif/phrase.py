@@ -19,6 +19,7 @@ class NIFPhrase(object):
             taClassRef = None,
             taMsClassRef = None,
             dependencyRelationType = None,
+            dependency = None,
             uri = None,
             source = None):
         self.context = context
@@ -31,6 +32,7 @@ class NIFPhrase(object):
         self.taClassRef = taClassRef
         self.taMsClassRef = taMsClassRef
         self.dependencyRelationType = dependencyRelationType
+        self.dependency = dependency
         self.original_uri = uri
         self.source = source
 
@@ -68,6 +70,8 @@ class NIFPhrase(object):
             yield (self.uri, NIF.taMsClassRef, URIRef(self.taMsClassRef))
         if self.dependencyRelationType is not None:
             yield (self.uri, NIF.dependencyRelationType, Literal(self.dependencyRelationType, datatype=XSD.string))
+        if self.dependency is not None:
+            yield (self.uri, NIF.dependency, Literal(self.dependency, datatype=XSD.string))
         if self.source is not None:
             yield (self.uri, ITSRDF.taSource, Literal(self.source, datatype=XSD.string))
 
@@ -98,6 +102,8 @@ class NIFPhrase(object):
                 phrase.taMsClassRef = o.toPython()
             elif p == NIF.dependencyRelationType:
                 phrase.dependencyRelationType = o.toPython()
+            elif p == NIF.dependency:
+                phrase.dependency = o.toPython()
             elif p == ITSRDF.taClassRef:
                 if phrase.taClassRef is None:
                     phrase.taClassRef = []
@@ -140,6 +146,7 @@ class NIFPhrase(object):
         set(self.taClassRef) if self.taClassRef else set(),
         self.taMsClassRef,
         self.dependencyRelationType,
+        self.dependency,
         self.uri,
         self.source)
 
