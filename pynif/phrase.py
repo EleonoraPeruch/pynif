@@ -74,6 +74,9 @@ class NIFPhrase(object):
         if self.dependency is not None:
             yield (self.uri, NIF.dependency, Literal(self.dependency, datatype=XSD.string))
 
+        if self.dependency is not None:
+            yield (self.uri, NIF.dependency, URIRef(self.dependency))
+
         if self.source is not None:
             yield (self.uri, ITSRDF.taSource, Literal(self.source, datatype=XSD.string))
 
