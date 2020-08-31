@@ -71,8 +71,8 @@ class NIFPhrase(object):
         if self.dependencyRelationType is not None:
             yield (self.uri, NIF.dependencyRelationType, Literal(self.dependencyRelationType, datatype=XSD.string))
 
-        if self.dependency is not None:
-            yield (self.uri, NIF.dependency, Literal(self.dependency, datatype=XSD.string))
+        #if self.dependency is not None:
+        #    yield (self.uri, NIF.dependency, Literal(self.dependency, datatype=XSD.string))
 
         if self.dependency is not None:
             yield (self.uri, NIF.dependency, URIRef(self.dependency))
