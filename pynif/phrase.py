@@ -52,7 +52,7 @@ class NIFPhrase(object):
         yield (self.uri, RDF.type, NIF.Phrase)
         yield (self.uri, NIF.anchorOf, Literal(self.mention, datatype=XSD.string))
         yield (self.uri, NIF.beginIndex, Literal(self.beginIndex, datatype=XSD.nonNegativeInteger))
-        yield (self.uri, NIF.endIndex, Literal(self.endIndex, datatype=XSD.nonNegativeInteger))
+        yield (self.uri, NIF.endIndex, Literal(self.endIndex-1, datatype=XSD.nonNegativeInteger))
 
         if self.annotator is not None:
             yield (self.uri, ITSRDF.taAnnotatorsRef, URIRef(self.annotator))
