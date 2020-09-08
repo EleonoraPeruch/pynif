@@ -42,7 +42,7 @@ class NIFPhrase(object):
 
     @property
     def generated_uri(self):
-        return self.context.split('#')[0] + '#offset_' + str(self.beginIndex) + '_' + str(self.endIndex)
+        return self.context.split('#')[0] + '#offset_' + str(self.beginIndex) + '_' + str(self.endIndex-1)
 
     def triples(self):
         """
